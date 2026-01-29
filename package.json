@@ -1,0 +1,10 @@
+{
+  "name": "unitune-cloudflare-worker",
+  "version": "2.2.0",
+  "type": "module",
+  "description": "UniTune Cloudflare Worker for music link sharing",
+  "main": "worker.js",
+  "scripts": {
+    "test": "node test_ads_txt.js"
+  }
+}

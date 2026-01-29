@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "de.unitune.unitune",
+      "sha256_cert_fingerprints": [
+        "C7:90:95:58:38:47:AE:48:50:03:87:47:A8:CE:54:8E:91:40:35:8B:C5:A0:51:A3:64:E0:8B:56:E2:B8:A8:86"
+      ]
+    }
+  }
+]

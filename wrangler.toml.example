@@ -1,0 +1,41 @@
+# UniTune Cloudflare Worker Configuration
+# Copy this file to wrangler.toml and adjust for your environment
+
+name = "unitune-worker"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Static Assets - Logos and other files
+[assets]
+directory = "./public"
+
+# KV Namespace for rate limiting
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "YOUR_RATE_LIMIT_KV_ID"
+preview_id = "YOUR_RATE_LIMIT_PREVIEW_ID"
+
+# KV Namespace for song caching
+[[kv_namespaces]]
+binding = "SONG_CACHE"
+id = "YOUR_SONG_CACHE_KV_ID"
+preview_id = "YOUR_SONG_CACHE_PREVIEW_ID"
+
+# Environment Variables
+[vars]
+# AdSense Publisher ID
+ADSENSE_PUBLISHER_ID = "ca-pub-YOUR_PUBLISHER_ID"
+
+# UniTune API Endpoint
+# Replace with your actual API endpoint
+UNITUNE_API_ENDPOINT = "https://api.unitune.art/v1-alpha.1/links"
+
+# Environment name (development, staging, production)
+ENVIRONMENT = "production"
+
+# Debug Logging (set to "true" to enable detailed logging)
+# WARNING: Only enable for debugging! Set to "false" for production
+DEBUG_LOGGING = "false"
+
+# Worker version
+WORKER_VERSION = "2.2.0"
