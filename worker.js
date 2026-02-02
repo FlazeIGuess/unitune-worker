@@ -237,6 +237,28 @@ const SERVICES = {
     },
 };
 
+/**
+ * Reconstructs a music URL from platform, type, and ID
+ * 
+ * @param {string} platform - Platform identifier (spotify, tidal, etc.)
+ * @param {string} type - Content type (track, album, etc.)
+ * @param {string} id - Track/content ID
+ * @returns {string|null} - Reconstructed URL or null if platform unsupported
+ */
+function reconstructMusicUrl(platform, type, id) {
+    const urls = {
+        'spotify': `https://open.spotify.com/${type}/${id}`,
+        'tidal': `https://tidal.com/browse/${type}/${id}`,
+        'applemusic': `https://music.apple.com/us/song/${id}`,
+        'youtubemusic': `https://music.youtube.com/watch?v=${id}`,
+        'youtube': `https://youtube.com/watch?v=${id}`,
+        'deezer': `https://www.deezer.com/${type}/${id}`,
+        'amazonmusic': `https://music.amazon.com/tracks/${id}`
+    };
+    
+    return urls[platform.toLowerCase()] || null;
+}
+
 
 export default {
     async fetch(request, env, ctx) {
@@ -463,54 +485,68 @@ export default {
 
                 log(config, 'debug', 'Path after /s/', { pathAfterS });
 
-                // Decode the URL (may be encoded multiple times)
-                let decodedUrl = decodeURIComponent(pathAfterS);
+                // Decode share link (Base64 format)
+                let musicUrl = null;
 
-                log(config, 'debug', 'First decode', { decodedUrl });
-
-                // If the URL is still encoded, decode again
-                let iterations = 0;
-                while (decodedUrl.includes('%') && iterations < 5) {
-                    try {
-                        const newDecoded = decodeURIComponent(decodedUrl);
-                        if (newDecoded === decodedUrl) break; // No more changes
-                        decodedUrl = newDecoded;
-                        iterations++;
-                        log(config, 'debug', `Decode iteration ${iterations}`, { decodedUrl });
-                    } catch (e) {
-                        log(config, 'warn', 'Decode error', {
-                            error: e.message,
-                            iteration: iterations,
-                            currentUrl: decodedUrl
-                        });
-                        break; // Already fully decoded
-                    }
-                }
-
-                // Clean the URL from trailing fragments (TIDAL URLs can end with /u, /uLog)
-                const originalUrl = decodedUrl;
-                decodedUrl = decodedUrl.replace(/\/u(Log)?$/, '');
-
-                if (originalUrl !== decodedUrl) {
-                    log(config, 'debug', 'Cleaned trailing fragments', {
-                        original: originalUrl,
-                        cleaned: decodedUrl
-                    });
-                }
-
-                // Validate the decoded URL
                 try {
-                    const testUrl = new URL(decodedUrl);
-                    log(config, 'info', 'Valid URL detected', {
-                        protocol: testUrl.protocol,
-                        hostname: testUrl.hostname,
-                        pathname: testUrl.pathname.substring(0, 30)
+                    // Try Base64 decode
+                    let padded = pathAfterS;
+                    while (padded.length % 4 !== 0) {
+                        padded += '=';
+                    }
+                    
+                    // Decode Base64 (URL-safe)
+                    const decoded = atob(padded.replace(/-/g, '+').replace(/_/g, '/'));
+                    
+                    log(config, 'debug', 'Base64 decoded', { decoded: decoded.substring(0, 50) });
+                    
+                    // Check if it's platform:type:id format
+                    if (decoded.includes(':') && !decoded.startsWith('http')) {
+                        const parts = decoded.split(':');
+                        if (parts.length >= 3) {
+                            const platform = parts[0];
+                            const type = parts[1];
+                            const id = parts.slice(2).join(':'); // Handle IDs with colons
+                            
+                            // Reconstruct music URL
+                            musicUrl = reconstructMusicUrl(platform, type, id);
+                            
+                            if (!musicUrl) {
+                                log(config, 'error', 'Unsupported platform', { platform });
+                                const errorContent = getErrorPage('Unsupported music platform.');
+                                return addSecurityHeaders(new Response(errorContent, {
+                                    headers: { 'Content-Type': 'text/html; charset=utf-8' },
+                                    status: 400,
+                                }));
+                            }
+                            
+                            log(config, 'info', 'Reconstructed URL', {
+                                platform,
+                                type,
+                                id: id.substring(0, 20)
+                            });
+                        }
+                    }
+                } catch (e) {
+                    log(config, 'error', 'Base64 decode failed', {
+                        error: e.message,
+                        pathAfterS: pathAfterS.substring(0, 50)
                     });
-                } catch (urlError) {
-                    log(config, 'error', 'Invalid URL format', {
-                        error: urlError.message,
-                        decodedUrl: decodedUrl.substring(0, 100)
-                    });
+                    
+                    const errorContent = getErrorPage('Invalid share link format.');
+                    return addSecurityHeaders(new Response(errorContent, {
+                        headers: { 'Content-Type': 'text/html; charset=utf-8' },
+                        status: 400,
+                    }));
+                }
+
+                if (!musicUrl) {
+                    log(config, 'error', 'Could not decode share link');
+                    const errorContent = getErrorPage('Invalid share link.');
+                    return addSecurityHeaders(new Response(errorContent, {
+                        headers: { 'Content-Type': 'text/html; charset=utf-8' },
+                        status: 400,
+                    }));
                 }
 
                 // Check if request is from a social media bot
@@ -525,11 +561,11 @@ export default {
                 if (isBot) {
                     // Bot request: Server-side rendering with cached data
                     log(config, 'info', 'Serving bot with server-side rendering');
-                    return await handleShareLinkServerSide(decodedUrl, request, config, env);
+                    return await handleShareLinkServerSide(musicUrl, request, config, env);
                 } else {
                     // Normal user: Client-side loading
                     log(config, 'info', 'Serving user with client-side loading');
-                    return getClientSideLoadingPage(decodedUrl, config);
+                    return getClientSideLoadingPage(musicUrl, config);
                 }
             }
 
