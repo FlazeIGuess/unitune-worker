@@ -1,7 +1,7 @@
 /**
  * UniTune Cloudflare Worker - Privacy Optimized
- * Version: 2.2.0
- * Last Updated: 2026-01-29
+ * Version: 1.1.0
+ * Last Updated: 2026-02-02
  * 
  * Privacy Features:
  * - No server-side logging of requests or user data
@@ -257,6 +257,71 @@ function reconstructMusicUrl(platform, type, id) {
     };
     
     return urls[platform.toLowerCase()] || null;
+}
+
+/**
+ * Fetch and cache song metadata from UniTune API
+ * Uses Base64 share link ID as cache key for efficient caching
+ * 
+ * @param {string} musicUrl - The reconstructed music URL
+ * @param {string} encodedPath - The Base64 encoded share link ID
+ * @param {Object} config - Worker configuration
+ * @param {Object} env - Environment bindings (KV namespaces)
+ * @returns {Object|null} - Song metadata or null if not found
+ */
+async function fetchAndCacheMetadata(musicUrl, encodedPath, config, env) {
+    // Use Base64 string as cache key (more efficient than hashing full URL)
+    const cacheKey = `metadata:${encodedPath}`;
+    
+    // Try to get from cache first
+    let metadata = null;
+    if (env.SONG_CACHE) {
+        const cached = await env.SONG_CACHE.get(cacheKey, 'json');
+        
+        if (cached && cached.timestamp && (Date.now() - cached.timestamp < 86400000)) {
+            log(config, 'info', 'Using cached metadata', {
+                cacheKey: cacheKey.substring(0, 30)
+            });
+            return cached.data;
+        }
+    }
+    
+    // Not in cache, fetch from API
+    log(config, 'info', 'Fetching metadata from API');
+    const apiUrl = `${config.unituneApiEndpoint}?url=${encodeURIComponent(musicUrl)}`;
+    
+    try {
+        const response = await fetch(apiUrl, {
+            headers: {
+                'User-Agent': 'UniTune-Worker/1.1.0 (https://unitune.art)',
+            },
+        });
+        
+        if (response.ok) {
+            metadata = await response.json();
+            
+            // Cache the metadata
+            if (env.SONG_CACHE && metadata) {
+                await env.SONG_CACHE.put(cacheKey, JSON.stringify({
+                    data: metadata,
+                    timestamp: Date.now()
+                }), {
+                    expirationTtl: 86400 // 24 hours
+                });
+                log(config, 'info', 'Cached metadata', {
+                    cacheKey: cacheKey.substring(0, 30)
+                });
+            }
+            
+            return metadata;
+        } else {
+            log(config, 'warn', 'API error', { status: response.status });
+            return null;
+        }
+    } catch (error) {
+        log(config, 'error', 'Fetch error', { error: error.message });
+        return null;
+    }
 }
 
 
@@ -549,6 +614,18 @@ export default {
                     }));
                 }
 
+                // Fetch and cache metadata for all requests (bot and user)
+                const metadata = await fetchAndCacheMetadata(musicUrl, pathAfterS, config, env);
+                
+                if (!metadata) {
+                    log(config, 'error', 'Failed to fetch metadata');
+                    const errorContent = getErrorPage('Song not found. Please try again.');
+                    return addSecurityHeaders(new Response(errorContent, {
+                        headers: { 'Content-Type': 'text/html; charset=utf-8' },
+                        status: 404,
+                    }));
+                }
+
                 // Check if request is from a social media bot
                 const userAgent = request.headers.get('User-Agent') || '';
                 const isBot = isSocialMediaBot(userAgent);
@@ -559,13 +636,13 @@ export default {
                 });
 
                 if (isBot) {
-                    // Bot request: Server-side rendering with cached data
+                    // Bot request: Server-side rendering with metadata
                     log(config, 'info', 'Serving bot with server-side rendering');
-                    return await handleShareLinkServerSide(musicUrl, request, config, env);
+                    return getServerSideRenderedPage(musicUrl, metadata, config);
                 } else {
-                    // Normal user: Client-side loading
+                    // Normal user: Client-side loading with metadata for Open Graph
                     log(config, 'info', 'Serving user with client-side loading');
-                    return getClientSideLoadingPage(musicUrl, config);
+                    return getClientSideLoadingPage(musicUrl, metadata, config);
                 }
             }
 
@@ -622,69 +699,18 @@ export default {
 };
 
 /**
- * Server-Side handler for bots (WhatsApp, Telegram, etc.)
- * Uses Cloudflare KV cache to avoid hitting API rate limits
- * Fetches data from UniTune API instead of Odesli
+ * Server-Side rendering for bots with pre-fetched metadata
+ * Metadata is already fetched and cached by the main handler
  */
-async function handleShareLinkServerSide(musicUrl, request, config, env) {
+function getServerSideRenderedPage(musicUrl, metadata, config) {
     try {
-        log(config, 'info', 'Server-side rendering for bot');
-
-        // Try to get from cache first
-        let data = null;
-        if (env.SONG_CACHE) {
-            const cacheKey = `song:${btoa(musicUrl).substring(0, 200)}`;
-            const cached = await env.SONG_CACHE.get(cacheKey, 'json');
-
-            if (cached && cached.timestamp && (Date.now() - cached.timestamp < 86400000)) {
-                log(config, 'info', 'Using cached song data');
-                data = cached.data;
-            }
-        }
-
-        // If not in cache, fetch from UniTune API
-        if (!data) {
-            log(config, 'info', 'Fetching from UniTune API');
-            const apiUrl = `${config.unituneApiEndpoint}?url=${encodeURIComponent(musicUrl)}`;
-
-            const response = await fetch(apiUrl, {
-                headers: {
-                    'User-Agent': 'UniTune-Worker/2.2.0 (https://unitune.art)',
-                },
-            });
-
-            if (response.ok) {
-                data = await response.json();
-
-                // Cache the response
-                if (env.SONG_CACHE) {
-                    const cacheKey = `song:${btoa(musicUrl).substring(0, 200)}`;
-                    await env.SONG_CACHE.put(cacheKey, JSON.stringify({
-                        data,
-                        timestamp: Date.now()
-                    }), {
-                        expirationTtl: 86400 // 24 hours
-                    });
-                    log(config, 'info', 'Cached song data');
-                }
-            } else {
-                log(config, 'warn', 'UniTune API error', { status: response.status });
-                // Return error page
-                const errorContent = getErrorPage('Song not found. Please try again.');
-                return addSecurityHeaders(new Response(errorContent, {
-                    headers: { 'Content-Type': 'text/html; charset=utf-8' },
-                    status: 404,
-                }));
-            }
-        }
-
         // Extract metadata
-        const entities = Object.values(data.entitiesByUniqueId || {});
+        const entities = Object.values(metadata.entitiesByUniqueId || {});
         const firstEntity = entities[0] || {};
         const title = firstEntity.title || 'Unknown Song';
         const artist = firstEntity.artistName || 'Unknown Artist';
         const thumbnail = firstEntity.thumbnailUrl || '';
-        const links = data.linksByPlatform || {};
+        const links = metadata.linksByPlatform || {};
 
         log(config, 'info', 'Rendering page for bot', {
             title: title.substring(0, 30),
@@ -706,7 +732,7 @@ async function handleShareLinkServerSide(musicUrl, request, config, env) {
         }));
 
     } catch (error) {
-        log(config, 'error', 'Error in handleShareLinkServerSide', {
+        log(config, 'error', 'Error in getServerSideRenderedPage', {
             error: error.message
         });
 
@@ -721,10 +747,23 @@ async function handleShareLinkServerSide(musicUrl, request, config, env) {
 /**
  * Client-Side loading page for normal users
  * JavaScript will fetch data via our API proxy
+ * Now includes actual metadata in Open Graph tags for messaging app previews
  */
-function getClientSideLoadingPage(musicUrl, config) {
+function getClientSideLoadingPage(musicUrl, metadata, config) {
     const escapedMusicUrl = escapeHtml(musicUrl);
     const encodedMusicUrl = encodeURIComponent(musicUrl);
+    
+    // Extract metadata for Open Graph tags
+    const entities = Object.values(metadata?.entitiesByUniqueId || {});
+    const firstEntity = entities[0] || {};
+    const title = firstEntity.title || 'UniTune - Universal Music Links';
+    const artist = firstEntity.artistName || 'Listen on your favorite platform';
+    const thumbnail = firstEntity.thumbnailUrl || 'https://unitune.art/logo.png';
+    
+    // Validate and escape
+    const escapedTitle = escapeHtml(title);
+    const escapedArtist = escapeHtml(artist);
+    const validatedThumbnail = isValidThumbnailUrl(thumbnail) ? escapeHtml(thumbnail) : 'https://unitune.art/logo.png';
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -732,12 +771,13 @@ function getClientSideLoadingPage(musicUrl, config) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="google-adsense-account" content="${config.adsensePublisherId}">
-  <title>UniTune - Loading...</title>
+  <title>${escapedTitle} - ${escapedArtist}</title>
   
-  <meta property="og:title" content="UniTune - Universal Music Links">
-  <meta property="og:description" content="Listen on your favorite platform">
-  <meta property="og:image" content="https://unitune.art/logo.png">
+  <meta property="og:title" content="${escapedTitle}">
+  <meta property="og:description" content="${escapedArtist}">
+  <meta property="og:image" content="${validatedThumbnail}">
   <meta property="og:url" content="https://unitune.art/s/${encodedMusicUrl}">
+  <meta property="og:type" content="music.song">
   <meta name="theme-color" content="#0D1117">
   
   <style>
@@ -2569,7 +2609,7 @@ function getPrivacyPolicy() {
 <body>
   <div class="content">
     <h1>Privacy Policy</h1>
-    <p class="last-updated">Last Updated: January 29, 2026</p>
+    <p class="last-updated">Last Updated: February 2, 2026</p>
     
     <div class="section">
       <p>UniTune is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and protect your information in compliance with the General Data Protection Regulation (GDPR) and other applicable privacy laws.</p>
@@ -2601,6 +2641,7 @@ function getPrivacyPolicy() {
       <p>Our service processes the following data temporarily without storage:</p>
       <ul>
         <li><strong>Music URLs:</strong> When you share a music link, we temporarily process it through our UniTune API (hosted by Uberspace in Düsseldorf, Germany) to generate universal links. This data is not stored and is not logged on our servers.</li>
+        <li><strong>Song Metadata Caching:</strong> To improve performance and reduce server load, we temporarily cache public song information (titles, artists, cover images) for up to 24 hours. This cached data contains no personal information and is shared across all users requesting the same song.</li>
         <li><strong>No Server Logging:</strong> UniTune does not log any request data, URLs, or user interactions on our servers. We have removed all server-side logging for maximum privacy.</li>
         <li><strong>Cloudflare:</strong> Our hosting provider Cloudflare may temporarily process requests for security purposes. These are automatically deleted.</li>
       </ul>
@@ -2744,7 +2785,7 @@ function getAppPrivacyPolicy() {
 <body>
   <div class="content">
     <h1>UniTune App Privacy Policy</h1>
-    <p class="last-updated">Last Updated: January 29, 2026</p>
+    <p class="last-updated">Last Updated: February 2, 2026</p>
     
     <div class="highlight">
       <strong>Privacy by Design:</strong> UniTune does not collect, store, or transmit any personal data. The app works entirely on your device.
