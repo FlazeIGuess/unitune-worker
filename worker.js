@@ -2775,8 +2775,8 @@ function getHomePage(adsensePublisherId) {
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="${adsensePublisherId}"
-         data-ad-slot="1234567890"
-         data-ad-format="horizontal"
+         data-ad-slot="1801419133"
+         data-ad-format="auto"
          data-full-width-responsive="true"></ins>
   </div>
   
@@ -2834,7 +2834,7 @@ function getHomePage(adsensePublisherId) {
            data-ad-format="fluid"
            data-ad-layout-key="-6t+ed+2i-1n-4w"
            data-ad-client="${adsensePublisherId}"
-           data-ad-slot="9876543210"></ins>
+           data-ad-slot="1801419133"></ins>
     </div>
     
     <!-- Supported Services -->
@@ -2906,7 +2906,7 @@ function getHomePage(adsensePublisherId) {
       <ins class="adsbygoogle"
            style="display:block"
            data-ad-client="${adsensePublisherId}"
-           data-ad-slot="1122334455"
+           data-ad-slot="1801419133"
            data-ad-format="autorelaxed"
            data-full-width-responsive="true"></ins>
     </div>
