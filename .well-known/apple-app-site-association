@@ -3,12 +3,13 @@
     "apps": [],
     "details": [
       {
-        "appID": "TEAM_ID.com.example.unitune",
+        "appID": "TEAM_ID.de.unitune.unitune",
         "paths": ["/s/*", "/"]
       }
     ]
   },
   "webcredentials": {
-    "apps": ["TEAM_ID.com.example.unitune"]
-  }
+    "apps": ["TEAM_ID.de.unitune.unitune"]
+  },
+  "comment": "Replace TEAM_ID with your Apple Developer Team ID from developer.apple.com"
 }

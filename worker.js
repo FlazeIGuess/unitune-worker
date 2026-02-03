@@ -1359,9 +1359,8 @@ function getClientSideLoadingPage(musicUrl, metadata, config) {
             const btn = document.querySelector('.get-app-btn');
             if (btn) {
               btn.innerHTML = '<div class="app-logo">' + UNITUNE_LOGO_SVG + '</div><span>Get UniTune App</span>';
-              // Update href to app store
-              const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-              btn.href = isIOS ? 'https://apps.apple.com/app/unitune' : 'https://play.google.com/store/apps/details?id=de.unitune.unitune';
+              // Update href to GitHub repository
+              btn.href = 'https://github.com/FlazeIGuess/unitune';
             }
           }
         }, 2500);
@@ -2344,7 +2343,7 @@ function getLandingPage({ title, artist, thumbnail, links, musicUrl, adsensePubl
                     const openAppBtn = document.getElementById('open-app-btn');
                     if (openAppBtn) {
                         openAppBtn.innerHTML = '<div class="app-logo">${unituneLogoSvg.replace(/'/g, "\\'")}</div><span>Get UniTune App</span>';
-                        openAppBtn.href = /iPhone|iPad|iPod/.test(navigator.userAgent) ? appStoreUrl : playStoreUrl;
+                        openAppBtn.href = 'https://github.com/FlazeIGuess/unitune';
                     }
                 }
             }, 2000);
@@ -2881,7 +2880,7 @@ function getAssetLinks() {
                 "namespace": "android_app",
                 "package_name": "de.unitune.unitune",
                 "sha256_cert_fingerprints": [
-                    "C7:90:95:58:38:47:AE:48:50:03:87:47:A8:CE:54:8E:91:40:35:8B:C5:A0:51:A3:64:E0:8B:56:E2:B8:A8:86"
+                    "00:A8:4E:3C:EB:8F:86:43:F4:3A:0C:2D:47:53:E8:F0:5E:A1:03:9A:3C:F6:E1:67:F9:0E:6B:8D:96:B0:CC:C6"
                 ]
             }
         }
