@@ -2441,82 +2441,497 @@ function getHomePage(adsensePublisherId) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-adsense-account" content="${adsensePublisherId}">
-  <title>UniTune</title>
+  <title>UniTune - Universal Music Link Sharing</title>
+  <meta name="description" content="Share your favorite music across all streaming platforms with a single tap. Convert links between Spotify, Apple Music, YouTube Music, Deezer, TIDAL, and Amazon Music.">
+  <meta name="keywords" content="music sharing, spotify, apple music, youtube music, universal music links, song converter">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="UniTune - Universal Music Link Sharing">
+  <meta property="og:description" content="Share music across all streaming platforms">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://unitune.art">
+  
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
+  
   <style>
     ${getCommonStyles()}
     ${getCookieBannerStyles()}
     
-    .container {
+    body {
+        background-attachment: fixed;
+        overflow-x: hidden;
+    }
+    
+    .page-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    /* Hero Section */
+    .hero-section {
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 100vh;
         text-align: center;
-        padding: 30px;
-    }
-    
-    .logo-area {
-        margin-bottom: 40px;
+        padding: 60px 20px;
         position: relative;
     }
     
-    h1 {
-        font-size: 48px;
+    .hero-logo {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 32px;
+        animation: scaleIn 0.6s ease-out;
+        color: var(--primary);
+    }
+    
+    .hero-title {
+        font-size: clamp(40px, 8vw, 64px);
         font-weight: 800;
-        letter-spacing: -1.5px;
+        letter-spacing: -2px;
         margin-bottom: 16px;
         background: linear-gradient(to bottom, #fff, #aaa);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        animation: fadeIn 0.6s ease-out 0.2s backwards;
     }
     
-    p.subtitle {
-        font-size: 19px;
+    .hero-subtitle {
+        font-size: clamp(18px, 3vw, 24px);
         color: var(--text-secondary);
-        max-width: 320px;
+        max-width: 600px;
         line-height: 1.5;
         margin-bottom: 40px;
+        animation: fadeIn 0.6s ease-out 0.4s backwards;
     }
     
-    .feature-pill {
+    .cta-button {
         display: inline-flex;
         align-items: center;
-        padding: 10px 18px;
-        background: var(--glass-base);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border-radius: 100px;
-        font-size: 14px;
-        font-weight: 500;
-        margin: 5px;
-        color: var(--text-primary);
-        border: 0.5px solid var(--glass-border);
-        animation: fadeIn 0.5s ease-out backwards;
+        gap: 12px;
+        padding: 16px 32px;
+        background: var(--primary);
+        color: white;
+        text-decoration: none;
+        border-radius: 16px;
+        font-size: 18px;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        animation: fadeIn 0.6s ease-out 0.6s backwards;
+        box-shadow: 0 4px 24px rgba(88, 166, 255, 0.3);
     }
     
-    .feature-pill:nth-child(1) { animation-delay: 0.2s; }
-    .feature-pill:nth-child(2) { animation-delay: 0.3s; }
-    .feature-pill:nth-child(3) { animation-delay: 0.4s; }
+    .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(88, 166, 255, 0.4);
+        background: var(--primary-light);
+    }
+    
+    .cta-button:active {
+        transform: scale(0.98);
+    }
+    
+    /* Ad Container */
+    .ad-container {
+        width: 100%;
+        max-width: 970px;
+        margin: 40px auto;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90px;
+    }
+    
+    /* Section Styles */
+    .section {
+        padding: 80px 20px;
+        width: 100%;
+    }
+    
+    .section-title {
+        font-size: clamp(32px, 5vw, 48px);
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 16px;
+        letter-spacing: -1px;
+        background: linear-gradient(to bottom, #fff, #ccc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .section-description {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 18px;
+        max-width: 700px;
+        margin: 0 auto 60px;
+        line-height: 1.6;
+    }
+    
+    /* Features Grid */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .feature-card {
+        background: var(--glass-base);
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        border: 0.5px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 32px;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 0 var(--glass-highlight);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+    }
+    
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 20px;
+        display: block;
+        color: var(--primary);
+    }
+    
+    .feature-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--text-primary);
+    }
+    
+    .feature-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        font-size: 15px;
+    }
+    
+    /* Services Grid */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 20px;
+        max-width: 1000px;
+        margin: 0 auto 60px;
+    }
+    
+    .service-card {
+        background: var(--glass-base);
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        border: 0.5px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .service-card:hover {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    }
+    
+    .service-logo {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 16px;
+        border-radius: 12px;
+        object-fit: contain;
+    }
+    
+    .service-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    
+    /* How It Works */
+    .steps-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 32px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .step-card {
+        text-align: center;
+        padding: 32px;
+    }
+    
+    .step-number {
+        width: 64px;
+        height: 64px;
+        background: var(--primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0 auto 24px;
+        box-shadow: 0 4px 24px rgba(88, 166, 255, 0.3);
+    }
+    
+    .step-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--text-primary);
+    }
+    
+    .step-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+    
+    /* Footer */
+    .footer {
+        padding: 60px 20px 40px;
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 80px;
+    }
+    
+    .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+    
+    .footer-link {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 15px;
+        transition: color 0.2s;
+    }
+    
+    .footer-link:hover {
+        color: var(--primary);
+    }
+    
+    .footer-text {
+        color: var(--text-muted);
+        font-size: 14px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section {
+            min-height: 90vh;
+            padding: 40px 20px;
+        }
+        
+        .section {
+            padding: 60px 20px;
+        }
+        
+        .features-grid,
+        .services-grid,
+        .steps-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .ad-container {
+            padding: 10px;
+        }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="logo-area">
-        <div class="hero-logo">${unituneLogoSvg}</div>
-    </div>
-    <h1>UniTune</h1>
-    <p class="subtitle">Share music universally. No tracking, just music.</p>
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-logo">${unituneLogoSvg}</div>
+    <h1 class="hero-title">UniTune</h1>
+    <p class="hero-subtitle">Share your favorite music across all streaming platforms with a single tap</p>
+    <a href="https://github.com/FlazeIGuess/unitune/releases" class="cta-button" target="_blank" rel="noopener">
+      <span>Download App</span>
+      <span>→</span>
+    </a>
+  </div>
+  
+  <!-- Top Ad -->
+  <div class="ad-container">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="${adsensePublisherId}"
+         data-ad-slot="1234567890"
+         data-ad-format="horizontal"
+         data-full-width-responsive="true"></ins>
+  </div>
+  
+  <div class="page-container">
+    <!-- Features Section -->
+    <section class="section">
+      <h2 class="section-title">Key Features</h2>
+      <p class="section-description">Everything you need for seamless cross-platform music sharing</p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+          <h3 class="feature-title">Universal Link Conversion</h3>
+          <p class="feature-description">Convert music links seamlessly between all major streaming platforms. Paste any music link and get instant access across Spotify, Apple Music, YouTube Music, Deezer, TIDAL, and Amazon Music.</p>
+        </div>
+        
+        <div class="feature-card">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <h3 class="feature-title">Privacy-First Architecture</h3>
+          <p class="feature-description">Your data stays on your device. No accounts, no tracking, no cloud storage. UniTune operates entirely locally with zero data collection or external analytics.</p>
+        </div>
+        
+        <div class="feature-card">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+          <h3 class="feature-title">Smart Sharing Integration</h3>
+          <p class="feature-description">Share directly to your favorite messaging apps with intelligent platform detection. Integrates with WhatsApp, Telegram, Signal, SMS, and system share functionality.</p>
+        </div>
+        
+        <div class="feature-card">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+          </svg>
+          <h3 class="feature-title">Dynamic Visual Experience</h3>
+          <p class="feature-description">Watch the app transform with every song. Album artwork automatically influences the color scheme, creating a unique visual experience that adapts to your music taste.</p>
+        </div>
+      </div>
+    </section>
     
-    <div>
-        <div class="feature-pill">Spotify</div>
-        <div class="feature-pill">Apple Music</div>
-        <div class="feature-pill">YouTube</div>
+    <!-- In-Content Ad -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-format="fluid"
+           data-ad-layout-key="-6t+ed+2i-1n-4w"
+           data-ad-client="${adsensePublisherId}"
+           data-ad-slot="9876543210"></ins>
     </div>
+    
+    <!-- Supported Services -->
+    <section class="section">
+      <h2 class="section-title">Supported Platforms</h2>
+      <p class="section-description">Connect your favorite music streaming services</p>
+      
+      <div class="services-grid">
+        <div class="service-card">
+          <img src="/assets/logos/spotify.png" alt="Spotify" class="service-logo" loading="lazy">
+          <div class="service-name">Spotify</div>
+        </div>
+        
+        <div class="service-card">
+          <img src="/assets/logos/apple_music.png" alt="Apple Music" class="service-logo" loading="lazy">
+          <div class="service-name">Apple Music</div>
+        </div>
+        
+        <div class="service-card">
+          <img src="/assets/logos/youtube_music.png" alt="YouTube Music" class="service-logo" loading="lazy">
+          <div class="service-name">YouTube Music</div>
+        </div>
+        
+        <div class="service-card">
+          <img src="/assets/logos/deezer.png" alt="Deezer" class="service-logo" loading="lazy">
+          <div class="service-name">Deezer</div>
+        </div>
+        
+        <div class="service-card">
+          <img src="/assets/logos/tidal.png" alt="TIDAL" class="service-logo" loading="lazy">
+          <div class="service-name">TIDAL</div>
+        </div>
+        
+        <div class="service-card">
+          <img src="/assets/logos/amazon_music.png" alt="Amazon Music" class="service-logo" loading="lazy">
+          <div class="service-name">Amazon Music</div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- How It Works -->
+    <section class="section">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-description">Get started in three simple steps</p>
+      
+      <div class="steps-container">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3 class="step-title">Share a Music Link</h3>
+          <p class="step-description">Copy any music link from Spotify, Apple Music, YouTube Music, or other supported platforms.</p>
+        </div>
+        
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3 class="step-title">UniTune Converts It</h3>
+          <p class="step-description">Our service instantly finds the same song across all major streaming platforms.</p>
+        </div>
+        
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Open in Your App</h3>
+          <p class="step-description">Choose your preferred platform and enjoy the music. Share with friends who use different services.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Bottom Ad -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="${adsensePublisherId}"
+           data-ad-slot="1122334455"
+           data-ad-format="autorelaxed"
+           data-full-width-responsive="true"></ins>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="https://github.com/FlazeIGuess/unitune" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="/privacy" class="footer-link">Privacy Policy</a>
+        <a href="/privacy-app" class="footer-link">App Privacy</a>
+        <a href="https://github.com/FlazeIGuess/unitune/issues" class="footer-link" target="_blank" rel="noopener">Support</a>
+      </div>
+      <p class="footer-text">Made with Love | Open Source under AGPL-3.0</p>
+    </footer>
   </div>
   
   ${getCookieBannerHTML()}
   ${getCookieBannerScript(adsensePublisherId)}
+  
+  <!-- Initialize AdSense -->
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
 </body>
 </html>`;
 }
