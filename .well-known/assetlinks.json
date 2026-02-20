@@ -1,12 +1,16 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "de.unitune.unitune",
-      "sha256_cert_fingerprints": [
-        "00:A8:4E:3C:EB:8F:86:43:F4:3A:0C:2D:47:53:E8:F0:5E:A1:03:9A:3C:F6:E1:67:F9:0E:6B:8D:96:B0:CC:C6"
-      ]
-    }
+    "relation": [
+                "delegate_permission/common.handle_all_urls",
+                "delegate_permission/common.get_login_creds"
+            ],
+            "target": {
+                "namespace": "android_app",
+                "package_name": "de.unitune.unitune",
+                "sha256_cert_fingerprints": [
+                    "00:A8:4E:3C:EB:8F:86:43:F4:3A:0C:2D:47:53:E8:F0:5E:A1:03:9A:3C:F6:E1:67:F9:0E:6B:8D:96:B0:CC:C6",
+                    "BA:83:7A:A1:73:E4:ED:D9:62:54:A9:2C:36:36:63:AD:37:D4:DC:4B:3D:1F:DC:EF:59:24:49:7D:EF:15:43:47"
+                ]
+            }
   }
 ]

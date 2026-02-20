@@ -4,7 +4,7 @@
     "details": [
       {
         "appID": "TEAM_ID.de.unitune.unitune",
-        "paths": ["/s/*", "/"]
+        "paths": ["/s/*", "/p/*"]
       }
     ]
   },
