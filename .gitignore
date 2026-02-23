@@ -3,6 +3,10 @@
 # wrangler.toml is committed — no actual secrets, only public IDs
 !wrangler.toml.example
 
+# Temp files from version generation
+generated-version.json
+generated-version.json.tmp
+
 # Dependencies
 node_modules/
 
