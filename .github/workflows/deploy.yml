@@ -46,7 +46,9 @@ jobs:
 
     # Restore wrangler.toml from secret (the file is gitignored to protect KV IDs / ad config)
     - name: Restore wrangler.toml
-      run: echo '${{ secrets.WRANGLER_TOML }}' > wrangler.toml
+      env:
+        WRANGLER_TOML_CONTENT: ${{ secrets.WRANGLER_TOML }}
+      run: printf '%s' "$WRANGLER_TOML_CONTENT" > wrangler.toml
 
     - name: Install Wrangler
       run: npm install -g wrangler
