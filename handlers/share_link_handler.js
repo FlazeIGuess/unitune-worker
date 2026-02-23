@@ -23,6 +23,7 @@ export async function handleShareLink(pathname, request, config, env) {
 
     // Decode share link (Base64 format)
     let musicUrl = null;
+    let sharedByNickname = null;
 
     try {
         // Try Base64 decode
@@ -36,13 +37,23 @@ export async function handleShareLink(pathname, request, config, env) {
         
         log(config, 'debug', 'Base64 decoded', { decoded: decoded.substring(0, 50) });
         
-        // Check if it's platform:type:id format
+        // Check if it's platform:type:id or platform:type:id:nickname format
         if (decoded.includes(':') && !decoded.startsWith('http')) {
             const parts = decoded.split(':');
             if (parts.length >= 3) {
                 const platform = parts[0];
                 const type = parts[1];
-                const id = parts.slice(2).join(':'); // Handle IDs with colons
+                
+                // Check if nickname is present (4+ parts)
+                let id;
+                if (parts.length >= 4) {
+                    // Last part is nickname, everything in between is ID
+                    sharedByNickname = parts[parts.length - 1];
+                    id = parts.slice(2, parts.length - 1).join(':');
+                } else {
+                    // No nickname, everything after type is ID
+                    id = parts.slice(2).join(':');
+                }
                 
                 // Reconstruct music URL
                 musicUrl = reconstructMusicUrl(platform, type, id);
@@ -59,7 +70,8 @@ export async function handleShareLink(pathname, request, config, env) {
                 log(config, 'info', 'Reconstructed URL', {
                     platform,
                     type,
-                    id: id.substring(0, 20)
+                    id: id.substring(0, 20),
+                    nickname: sharedByNickname || 'none'
                 });
             }
         }
@@ -109,7 +121,7 @@ export async function handleShareLink(pathname, request, config, env) {
     if (isBot) {
         // Bot request: Server-side rendering with metadata
         log(config, 'info', 'Serving bot with server-side rendering');
-        return getServerSideRenderedPage(musicUrl, metadata, config);
+        return getServerSideRenderedPage(musicUrl, metadata, config, sharedByNickname);
     } else {
         // Normal user: Client-side loading with metadata for Open Graph
         log(config, 'info', 'Serving user with client-side loading');

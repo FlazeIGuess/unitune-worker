@@ -2,6 +2,8 @@ import { log } from '../utils/logger.js';
 import { isSocialMediaBot } from '../utils/bot_detector.js';
 import { getErrorPage } from '../templates/error_page.js';
 import { addSecurityHeaders } from '../security/headers.js';
+import { getPlaylistClientPage } from '../renderers/client_renderer.js';
+import { getPlaylistBotPage } from '../renderers/bot_renderer.js';
 
 export async function handlePlaylistLink(pathname, request, config) {
     const playlistId = pathname.substring(3);
@@ -39,33 +41,16 @@ export async function handlePlaylistLink(pathname, request, config) {
     const userAgent = request.headers.get('User-Agent') || '';
     const isBot = isSocialMediaBot(userAgent);
 
-    if (!isBot) {
-        const redirectUrl = `unitune://playlist?id=${encodeURIComponent(playlistId)}&source=web`;
-        return addSecurityHeaders(new Response(null, {
-            status: 302,
-            headers: { Location: redirectUrl },
-        }));
+    log(config, 'info', 'Playlist request type detected', {
+        isBot,
+        playlistId: playlistId.substring(0, 20)
+    });
+
+    if (isBot) {
+        // Bot request: Server-side rendering with Open Graph tags
+        return getPlaylistBotPage(playlist, playlistId, config);
+    } else {
+        // Normal user: Client-side rendering with full playlist display
+        return getPlaylistClientPage(playlist, playlistId, config);
     }
-
-    const title = playlist.title || 'UniTune Playlist';
-    const trackCount = Array.isArray(playlist.tracks) ? playlist.tracks.length : 0;
-    const thumbnail = trackCount > 0 ? playlist.tracks[0]?.thumbnailUrl : null;
-
-    const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title}</title>
-  <meta property="og:title" content="${title}">
-  <meta property="og:description" content="${trackCount} tracks">
-  ${thumbnail ? `<meta property="og:image" content="${thumbnail}">` : ''}
-  <meta name="twitter:card" content="summary_large_image">
-</head>
-<body></body>
-</html>`;
-
-    return addSecurityHeaders(new Response(html, {
-        headers: { 'Content-Type': 'text/html; charset=utf-8' },
-    }));
 }

@@ -6,12 +6,19 @@ import { getNavigationBar, getFooter } from './navigation.js';
 import { SERVICES } from '../constants/services.js';
 import { getDonationCard, getHorizontalDonationBanner, getDonationsStyles, getDonationsScript } from './donations.js';
 
-export function getLandingPage({ title, artist, thumbnail, links, musicUrl, adsensePublisherId }) {
+export function getLandingPage({ title, artist, thumbnail, links, musicUrl, adsensePublisherId, sharedByNickname = null }) {
     const encodedMusicUrl = encodeURIComponent(musicUrl);
 
     // Escape user-provided data to prevent XSS attacks
     const escapedTitle = escapeHtml(title);
     const escapedArtist = escapeHtml(artist);
+    const escapedNickname = sharedByNickname ? escapeHtml(sharedByNickname) : null;
+
+    // Build description with optional nickname
+    let ogDescription = escapedArtist;
+    if (escapedNickname) {
+        ogDescription = `${escapedArtist} • Shared by ${escapedNickname}`;
+    }
 
     // Validate and sanitize thumbnail URL
     // Only use thumbnail if it's from a trusted HTTPS source
@@ -53,7 +60,7 @@ export function getLandingPage({ title, artist, thumbnail, links, musicUrl, adse
   <title>${escapedTitle} - ${escapedArtist}</title>
   
   <meta property="og:title" content="${escapedTitle}">
-  <meta property="og:description" content="${escapedArtist}">
+  <meta property="og:description" content="${ogDescription}">
   <meta property="og:image" content="${escapedThumbnail}">
   <meta property="og:url" content="https://unitune.art/s/${encodedMusicUrl}">
   <meta property="og:type" content="music.song">

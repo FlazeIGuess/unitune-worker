@@ -57,7 +57,7 @@ export function setConsentCookie(response, status) {
     const expiryDate = new Date();
     expiryDate.setTime(expiryDate.getTime() + (COOKIE_EXPIRY_DAYS * 24 * 60 * 60 * 1000));
     
-    const cookieValue = `${COOKIE_NAME}=${status}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
+    const cookieValue = `${COOKIE_NAME}=${status}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax; Secure`;
     
     // Create new response with cookie header
     const newResponse = new Response(response.body, {
@@ -162,6 +162,16 @@ export function getConsentBannerScript() {
             window.location.href = '/privacy';
         }
 
+        function withdrawConsent() {
+            // Delete consent cookie by setting expiry in the past
+            document.cookie = COOKIE_NAME + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax; Secure';
+            // Show banner again so user can re-choose
+            const notice = document.getElementById('privacy-notice');
+            if (notice) {
+                notice.classList.add('visible');
+            }
+        }
+
         function init() {
             const consent = getCookie(COOKIE_NAME);
             
@@ -183,6 +193,17 @@ export function getConsentBannerScript() {
             if (acceptBtn) acceptBtn.addEventListener('click', acceptConsent);
             if (declineBtn) declineBtn.addEventListener('click', declineConsent);
             if (moreBtn) moreBtn.addEventListener('click', showMoreInfo);
+
+            // Wire up all "Withdraw Ad Consent" links in the footer and policy page
+            const withdrawLinks = document.querySelectorAll(
+                '#footer-withdraw-consent, #footer-withdraw-link'
+            );
+            withdrawLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    withdrawConsent();
+                });
+            });
         }
 
         // Wait for DOM to be ready

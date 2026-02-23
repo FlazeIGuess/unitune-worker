@@ -175,11 +175,10 @@ export function getDonationsStyles() {
     return `
     /* Horizontal Donation Banner (below navigation) */
     .horizontal-donation-banner {
-        position: sticky;
-        top: 96px;
-        z-index: 998;
+        position: relative;
+        z-index: 10;
         padding: 0 20px;
-        margin-top: 0;
+        margin-top: 24px;
         margin-bottom: 24px;
         animation: slideDown 0.5s ease-out;
     }
@@ -310,8 +309,8 @@ export function getDonationsStyles() {
     
     @media (max-width: 768px) {
         .horizontal-donation-banner {
-            top: 76px;
             padding: 0 12px;
+            margin-top: 20px;
             margin-bottom: 20px;
         }
         
@@ -347,7 +346,7 @@ export function getDonationsStyles() {
     
     @media (max-width: 480px) {
         .horizontal-donation-banner {
-            top: 76px;
+            margin-top: 16px;
             margin-bottom: 16px;
         }
         

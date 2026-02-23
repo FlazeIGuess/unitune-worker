@@ -285,6 +285,7 @@ export function getFooter() {
                 <a href="/contact">Contact</a>
                 <a href="/privacy">Privacy Policy</a>
                 <a href="/privacy-app">App Privacy Policy</a>
+                <a href="#" id="footer-withdraw-consent" style="color:rgba(255,255,255,0.35);font-size:12px;">Withdraw Ad Consent</a>
             </div>
             <div class="footer-section">
                 <h4>Open Source</h4>
@@ -366,6 +367,11 @@ export function getFooter() {
             padding: 24px 40px 0;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
             text-align: center;
+        }
+
+        #footer-withdraw-consent:hover {
+            color: rgba(255,255,255,0.6) !important;
+            transform: none !important;
         }
         
         .footer-bottom p {

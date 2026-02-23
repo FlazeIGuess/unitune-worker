@@ -10,9 +10,29 @@ export function getCommonStyles() {
         font-display: swap;
     }
     
+    /* Montserrat loaded from local worker assets — no external font requests (GDPR: no IP sent to Google Fonts) */
     @font-face {
         font-family: 'Montserrat';
-        src: url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        src: url('/fonts/Montserrat-Regular.ttf') format('truetype');
+        font-weight: 400;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: 'Montserrat';
+        src: url('/fonts/Montserrat-Medium.ttf') format('truetype');
+        font-weight: 500;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: 'Montserrat';
+        src: url('/fonts/Montserrat-SemiBold.ttf') format('truetype');
+        font-weight: 600;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: 'Montserrat';
+        src: url('/fonts/Montserrat-Bold.ttf') format('truetype');
+        font-weight: 700;
         font-display: swap;
     }
     

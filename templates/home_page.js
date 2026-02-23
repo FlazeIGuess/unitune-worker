@@ -28,9 +28,6 @@ export function getHomePage(adsensePublisherId) {
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://unitune.art">
   
-  <!-- AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
-  
   <style>
     ${getCommonStyles()}
     ${getCookieBannerStyles()}
@@ -318,7 +315,16 @@ export function getHomePage(adsensePublisherId) {
     }
     
     ${getDonationsStyles()}
-    
+  </style>
+  <!--
+    AdSense: NPA flag must be set BEFORE adsbygoogle.js loads so the library starts
+    in non-personalized mode. No personalization cookies are written at load time.
+    Actual ad slots are only pushed after explicit user consent (see cookie_banner.js).
+    The static script tag is required for Google's site verification crawler.
+  -->
+  <script>window.adsbygoogle = window.adsbygoogle || []; window.adsbygoogle.requestNonPersonalizedAds = 1;</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
+  <style>
     /* iOS Banner */
     .ios-banner {
         background: linear-gradient(135deg, rgba(88, 166, 255, 0.15), rgba(88, 166, 255, 0.05));
@@ -462,12 +468,12 @@ export function getHomePage(adsensePublisherId) {
     </div>
   </div>
   
-  <!-- Top Ad -->
+  <!-- Top Ad (unitune-homepage-top) -->
   <div class="ad-container">
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="${adsensePublisherId}"
-         data-ad-slot="1801419133"
+         data-ad-slot="6983656105"
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
   </div>
@@ -563,14 +569,14 @@ export function getHomePage(adsensePublisherId) {
       </div>
     </section>
     
-    <!-- In-Content Ad -->
+    <!-- In-Content Ad (unitune-homepage-incontent) -->
     <div class="ad-container">
       <ins class="adsbygoogle"
            style="display:block"
-           data-ad-format="fluid"
-           data-ad-layout-key="-6t+ed+2i-1n-4w"
            data-ad-client="${adsensePublisherId}"
-           data-ad-slot="1801419133"></ins>
+           data-ad-slot="1483771620"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
     </div>
     
     <!-- Supported Services -->
@@ -637,13 +643,13 @@ export function getHomePage(adsensePublisherId) {
       </div>
     </section>
     
-    <!-- Bottom Ad -->
+    <!-- Bottom Ad (unitune-homepage-bottom) -->
     <div class="ad-container">
       <ins class="adsbygoogle"
            style="display:block"
            data-ad-client="${adsensePublisherId}"
-           data-ad-slot="1801419133"
-           data-ad-format="autorelaxed"
+           data-ad-slot="6503805223"
+           data-ad-format="auto"
            data-full-width-responsive="true"></ins>
     </div>
     
@@ -653,13 +659,6 @@ export function getHomePage(adsensePublisherId) {
   
   ${getCookieBannerHTML()}
   ${getCookieBannerScript(adsensePublisherId)}
-  
-  <!-- Initialize AdSense -->
-  <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
   
   <!-- Load Donation Data -->
   

@@ -1,6 +1,7 @@
-import { getCommonStyles } from './styles.js';
+import { getCommonStyles, getCookieBannerStyles } from './styles.js';
 import { getNavigationBar, getFooter } from './navigation.js';
 import { getHorizontalDonationBanner, getDonationsStyles, getDonationsScript } from './donations.js';
+import { getCookieBannerHTML, getCookieBannerScript } from './cookie_banner.js';
 
 export function getAboutPage(adsensePublisherId) {
     return `<!DOCTYPE html>
@@ -9,30 +10,36 @@ export function getAboutPage(adsensePublisherId) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-adsense-account" content="${adsensePublisherId}">
+    <!--
+      AdSense: NPA flag set before script load — no personalization cookies at load time.
+      Slots are only pushed after explicit consent (cookie_banner.js).
+      Static tag required for Google site verification crawler.
+    -->
+    <script>window.adsbygoogle = window.adsbygoogle || []; window.adsbygoogle.requestNonPersonalizedAds = 1;</script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
     <title>About UniTune - Universal Music Link Sharing</title>
     <meta name="description" content="Learn about UniTune, the universal music link converter that makes sharing music across streaming platforms effortless.">
-    
-    <!-- AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
     
     <style>
         ${getCommonStyles()}
         ${getDonationsStyles()}
+        ${getCookieBannerStyles()}
     </style>
 </head>
 <body>
     ${getNavigationBar()}
+    ${getCookieBannerHTML()}
     ${getHorizontalDonationBanner()}
     <div class="content-wrapper">
         <h1>About UniTune</h1>
         <p class="lead">UniTune is a universal music link converter that makes sharing music across different streaming platforms effortless.</p>
         
-        <!-- Top Ad -->
+        <!-- Top Ad (unitune-page-top) -->
         <div style="margin: 32px 0; text-align: center;">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="${adsensePublisherId}"
-                 data-ad-slot="1801419133"
+                 data-ad-slot="1188403946"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
         </div>
@@ -57,10 +64,7 @@ export function getAboutPage(adsensePublisherId) {
     ${getFooter()}
     
     ${getDonationsScript()}
-    
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    ${getCookieBannerScript(adsensePublisherId)}
 </body>
 </html>`;
 }
@@ -72,30 +76,31 @@ export function getContactPage(adsensePublisherId) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-adsense-account" content="${adsensePublisherId}">
+    <script>window.adsbygoogle = window.adsbygoogle || []; window.adsbygoogle.requestNonPersonalizedAds = 1;</script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
     <title>Contact UniTune - Get in Touch</title>
     <meta name="description" content="Contact UniTune for support, feedback, or partnership inquiries.">
-    
-    <!-- AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
     
     <style>
         ${getCommonStyles()}
         ${getDonationsStyles()}
+        ${getCookieBannerStyles()}
     </style>
 </head>
 <body>
     ${getNavigationBar()}
+    ${getCookieBannerHTML()}
     ${getHorizontalDonationBanner()}
     <div class="content-wrapper">
         <h1>Contact Us</h1>
         <p class="lead">Have questions, feedback, or need support? We would love to hear from you!</p>
         
-        <!-- Top Ad -->
+        <!-- Top Ad (unitune-page-top) -->
         <div style="margin: 32px 0; text-align: center;">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="${adsensePublisherId}"
-                 data-ad-slot="1801419133"
+                 data-ad-slot="1188403946"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
         </div>
@@ -124,10 +129,7 @@ export function getContactPage(adsensePublisherId) {
     ${getFooter()}
     
     ${getDonationsScript()}
-    
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    ${getCookieBannerScript(adsensePublisherId)}
 </body>
 </html>`;
 }
@@ -140,29 +142,30 @@ export function getFaqPage(adsensePublisherId) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-adsense-account" content="${adsensePublisherId}">
+    <script>window.adsbygoogle = window.adsbygoogle || []; window.adsbygoogle.requestNonPersonalizedAds = 1;</script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
     <title>FAQ - UniTune Frequently Asked Questions</title>
     <meta name="description" content="Find answers to common questions about UniTune, the universal music link converter.">
-    
-    <!-- AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
     
     <style>
         ${getCommonStyles()}
         ${getDonationsStyles()}
+        ${getCookieBannerStyles()}
     </style>
 </head>
 <body>
     ${getNavigationBar()}
+    ${getCookieBannerHTML()}
     ${getHorizontalDonationBanner()}
     <div class="content-wrapper">
         <h1>Frequently Asked Questions</h1>
         
-        <!-- Top Ad -->
+        <!-- Top Ad (unitune-page-top) -->
         <div style="margin: 32px 0; text-align: center;">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="${adsensePublisherId}"
-                 data-ad-slot="1801419133"
+                 data-ad-slot="1188403946"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
         </div>
@@ -214,10 +217,7 @@ export function getFaqPage(adsensePublisherId) {
     ${getFooter()}
     
     ${getDonationsScript()}
-    
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    ${getCookieBannerScript(adsensePublisherId)}
 </body>
 </html>`;
 }
@@ -230,29 +230,30 @@ export function getHowItWorksPage(adsensePublisherId) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-adsense-account" content="${adsensePublisherId}">
+    <script>window.adsbygoogle = window.adsbygoogle || []; window.adsbygoogle.requestNonPersonalizedAds = 1;</script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
     <title>How UniTune Works - Universal Music Sharing</title>
     <meta name="description" content="Learn how UniTune converts music links between streaming platforms in three simple steps.">
-    
-    <!-- AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
     
     <style>
         ${getCommonStyles()}
         ${getDonationsStyles()}
+        ${getCookieBannerStyles()}
     </style>
 </head>
 <body>
     ${getNavigationBar()}
+    ${getCookieBannerHTML()}
     ${getHorizontalDonationBanner()}
     <div class="content-wrapper">
         <h1>How UniTune Works</h1>
         
-        <!-- Top Ad -->
+        <!-- Top Ad (unitune-page-top) -->
         <div style="margin: 32px 0; text-align: center;">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="${adsensePublisherId}"
-                 data-ad-slot="1801419133"
+                 data-ad-slot="1188403946"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
         </div>
@@ -290,10 +291,7 @@ export function getHowItWorksPage(adsensePublisherId) {
     ${getFooter()}
     
     ${getDonationsScript()}
-    
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    ${getCookieBannerScript(adsensePublisherId)}
 </body>
 </html>`;
 }
@@ -305,30 +303,31 @@ export function getFeaturesPage(adsensePublisherId) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-adsense-account" content="${adsensePublisherId}">
+    <script>window.adsbygoogle = window.adsbygoogle || []; window.adsbygoogle.requestNonPersonalizedAds = 1;</script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
     <title>Features - UniTune Universal Music Sharing</title>
     <meta name="description" content="Discover all features of UniTune: universal link conversion, privacy-first architecture, smart sharing, and more.">
-    
-    <!-- AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}" crossorigin="anonymous"></script>
     
     <style>
         ${getCommonStyles()}
         ${getDonationsStyles()}
+        ${getCookieBannerStyles()}
     </style>
 </head>
 <body>
     ${getNavigationBar()}
+    ${getCookieBannerHTML()}
     ${getHorizontalDonationBanner()}
     <div class="content-wrapper">
         <h1>UniTune Features</h1>
         <p class="lead">Everything you need for seamless cross-platform music sharing</p>
         
-        <!-- Top Ad -->
+        <!-- Top Ad (unitune-page-top) -->
         <div style="margin: 32px 0; text-align: center;">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="${adsensePublisherId}"
-                 data-ad-slot="1801419133"
+                 data-ad-slot="1188403946"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
         </div>
@@ -371,10 +370,7 @@ export function getFeaturesPage(adsensePublisherId) {
     ${getFooter()}
     
     ${getDonationsScript()}
-    
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    ${getCookieBannerScript(adsensePublisherId)}
 </body>
 </html>`;
 }

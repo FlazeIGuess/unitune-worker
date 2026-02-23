@@ -26,7 +26,7 @@ export function getPrivacyPolicy() {
   ${getNavigationBar()}
   <div class="content">
     <h1>Privacy Policy</h1>
-    <p class="last-updated">Last Updated: February 12, 2026</p>
+    <p class="last-updated">Last Updated: February 20, 2026</p>
     
     <div class="section">
       <p>UniTune is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and protect your information in compliance with the General Data Protection Regulation (GDPR) and other applicable privacy laws.</p>
@@ -47,11 +47,11 @@ export function getPrivacyPolicy() {
       <p>We believe in privacy by design. UniTune does NOT collect or store:</p>
       <ul>
         <li>Personal identification information (name, email, phone number)</li>
-        <li>IP addresses</li>
+        <li>IP addresses <em style="color:#6B7280;font-size:14px;">(UniTune itself logs no IPs; our CDN Cloudflare and advertising partner Google may process your IP address server-side for security and ad delivery &mdash; see their privacy policies linked below)</em></li>
         <li>Device identifiers or fingerprints</li>
         <li>Listening history or music preferences</li>
         <li>Location data</li>
-        <li>Cookies for tracking purposes</li>
+        <li>Cookies for behavioral tracking or advertising profiling <em style="color:#6B7280;font-size:14px;">(we do set a single functional cookie to remember your ad consent choice)</em></li>
       </ul>
 
       <h3>2.2 Data We Process to Provide the Service</h3>
@@ -66,8 +66,11 @@ export function getPrivacyPolicy() {
     </div>
 
     <div class="section">
-      <h2>3. Support UniTune</h2>
-      <p>UniTune is funded by voluntary support. We do not show advertising on this service.</p>
+      <h2>3. Advertising on This Website</h2>
+      <p>UniTune shows contextual advertisements on this website via <strong>Google AdSense</strong>. These ads are only loaded after you explicitly accept cookies via the consent banner. We do not use behavioral targeting, advertising IDs, or cross-site profiling.</p>
+      <p>Google AdSense may process your IP address and browser information on their servers for ad delivery and fraud prevention, even for non-personalized ads. UniTune itself does not store or log IP addresses. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a> for details.</p>
+      <p>You may decline the consent banner &mdash; the service remains fully accessible without ads. You can withdraw your consent at any time by clicking &ldquo;<a href="#" id="footer-withdraw-link">Withdraw Ad Consent</a>&rdquo; in the footer. UniTune is additionally supported by voluntary donations.</p>
+      <p><strong>Legal basis:</strong> Consent (Art. 6(1)(a) GDPR). Consent is stored in a cookie for 365 days and can be withdrawn at any time.</p>
     </div>
 
     <div class="section">
@@ -108,7 +111,7 @@ export function getPrivacyPolicy() {
       <h2>5. Your Rights Under GDPR</h2>
       <p>As a user in the European Economic Area (EEA), you have the following rights:</p>
       <ul>
-        <li><strong>Right to Access:</strong> Request information about data we process (we process none)</li>
+        <li><strong>Right to Access:</strong> Request information about data we process (playlist data only, stored upon your request to share or import)</li>
         <li><strong>Right to Rectification:</strong> Request correction of inaccurate data</li>
         <li><strong>Right to Erasure:</strong> Request deletion of your data</li>
         <li><strong>Right to Restriction:</strong> Request limitation of data processing</li>
@@ -124,6 +127,7 @@ export function getPrivacyPolicy() {
       <h2>6. Legal Basis for Processing</h2>
       <p>Under GDPR, we process data based on:</p>
       <ul>
+        <li><strong>Consent (Art. 6(1)(a) GDPR):</strong> For loading advertising via Google AdSense (website) — only after you explicitly accept via the consent banner</li>
         <li><strong>Contractual Necessity (Art. 6(1)(b) GDPR):</strong> To provide playlist sharing and import functionality</li>
         <li><strong>Legitimate Interest (Art. 6(1)(f) GDPR):</strong> To operate and secure the service</li>
       </ul>
@@ -131,7 +135,7 @@ export function getPrivacyPolicy() {
 
     <div class="section">
       <h2>7. Data Retention</h2>
-      <p>Playlist data is stored only as long as needed to provide sharing and import. Playlists may be deleted upon request and may be automatically removed after a period of inactivity.</p>
+      <p>Playlist data is stored only as long as needed to provide sharing and import. Playlists automatically expire and are deleted after <strong>180 days</strong>. Since playlists contain no personal data (only publicly available music metadata and song URLs), they are not subject to erasure requests under GDPR Art. 17. As a courtesy, you can delete your own playlist at any time directly from the app.</p>
     </div>
 
     <div class="section">
@@ -141,7 +145,7 @@ export function getPrivacyPolicy() {
 
     <div class="section">
       <h2>9. Children's Privacy</h2>
-      <p>Our service is not directed to children under 16. We do not knowingly collect data from children.</p>
+      <p>Our service is not directed to children under <strong>16</strong>. We do not knowingly collect data from children.</p>
     </div>
 
     <div class="section">
@@ -196,7 +200,7 @@ export function getAppPrivacyPolicy() {
   ${getNavigationBar()}
   <div class="content">
     <h1>UniTune App Privacy Policy</h1>
-    <p class="last-updated">Last Updated: February 12, 2026</p>
+    <p class="last-updated">Last Updated: February 20, 2026</p>
     
     <div class="highlight">
       <strong>Privacy by Design:</strong> No accounts, no tracking. Playlist data is stored on our servers only when you choose to share or import playlists.
@@ -209,7 +213,7 @@ export function getAppPrivacyPolicy() {
         <li>No user accounts required</li>
         <li>No personal information required</li>
         <li>No analytics or tracking</li>
-        <li>No advertising in the app</li>
+        <li>Contextual, non-personalized advertisements via Google AdMob — no Advertising ID (GAID), no behavioral profiling. For users in the EEA/UK, a GDPR consent dialog is shown before any ad is loaded (Art. 6(1)(a) GDPR). Google AdMob may process your IP address server-side for ad delivery and fraud prevention; UniTune itself does not store IP addresses. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google\'s Privacy Policy</a>.</li>
         <li><strong>Playlist data:</strong> Title, description, track URLs, optional thumbnails, and timestamps when you create or import playlists</li>
       </ul>
     </div>
@@ -275,23 +279,53 @@ export function getAppPrivacyPolicy() {
       <h2>5. Data Storage</h2>
       <ul>
         <li><strong>On-Device:</strong> Share history and preferences are stored locally on your device</li>
-        <li><strong>Server Storage:</strong> Playlists you choose to share or import are stored on our servers</li>
-        <li><strong>Deletion:</strong> You can request deletion of server-stored playlists at any time</li>
+        <li><strong>Server Storage:</strong> Playlists you choose to share or import are stored on our servers. They contain no personal data — only publicly available music metadata (song titles, artists, cover images) and track URLs.</li>
+        <li><strong>Automatic Expiry:</strong> Playlists automatically expire and are permanently deleted after <strong>180 days</strong>.</li>
+        <li><strong>Voluntary Deletion:</strong> You can delete your own playlist at any time directly from the app using the built-in delete function. No account or contact required.</li>
       </ul>
     </div>
 
     <div class="section">
       <h2>6. Children's Privacy</h2>
-      <p>Our app does not collect any personal information from anyone, including children under 13.</p>
+      <p>Our app does not collect any personal information from anyone, including children under <strong>16</strong> (as required by EU GDPR Art. 8).</p>
     </div>
 
     <div class="section">
-      <h2>7. Your Rights</h2>
-      <p>You can request access to or deletion of server-stored playlists. Contact us to exercise your rights.</p>
+      <h2>7. Your Rights Under GDPR</h2>
+      <p>As a user in the European Economic Area (EEA), you have the following rights:</p>
+      <ul>
+        <li><strong>Right to Access:</strong> Request information about data we process (playlist data only, stored upon your request)</li>
+        <li><strong>Right to Erasure:</strong> Playlists contain no personal data (only public music metadata) and are not subject to GDPR erasure requests. They expire automatically after 180 days. You can delete your own playlist at any time from the app.</li>
+        <li><strong>Right to Restriction:</strong> Request limitation of data processing</li>
+        <li><strong>Right to Data Portability:</strong> Receive your playlist data in a structured format</li>
+        <li><strong>Right to Object:</strong> Object to data processing, including for advertising</li>
+        <li><strong>Right to Withdraw Consent:</strong> Withdraw ad consent at any time via Settings &rarr; Manage Ad Consent</li>
+        <li><strong>Right to Lodge a Complaint:</strong> File a complaint with your local data protection authority (<a href="https://edpb.europa.eu/about-edpb/board/members_en" target="_blank" rel="noopener">EDPB Member List</a>)</li>
+      </ul>
     </div>
 
     <div class="section">
-      <h2>8. Contact</h2>
+      <h2>8. Legal Basis for Processing</h2>
+      <p>Under GDPR, we process data based on:</p>
+      <ul>
+        <li><strong>Consent (Art. 6(1)(a) GDPR):</strong> For loading advertising via Google AdMob &mdash; EEA/UK users are shown a consent dialog before any ad is loaded. Consent can be withdrawn at any time via Settings &rarr; Manage Ad Consent</li>
+        <li><strong>Contractual Necessity (Art. 6(1)(b) GDPR):</strong> To provide playlist sharing and import functionality</li>
+        <li><strong>Legitimate Interest (Art. 6(1)(f) GDPR):</strong> To operate and secure the service</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>9. Data Retention</h2>
+      <p>Playlist data is stored only as long as needed to provide sharing and import. Playlists automatically expire and are permanently deleted after <strong>180 days</strong>. Since playlists contain no personal data, they are not subject to GDPR erasure requests. Share history and preferences are stored locally on your device and can be cleared at any time.</p>
+    </div>
+
+    <div class="section">
+      <h2>10. International Data Transfers</h2>
+      <p>Our service uses Cloudflare's global network for delivery. Data may be processed in countries outside the EEA. Cloudflare complies with GDPR through Standard Contractual Clauses (SCCs). See: <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare Privacy Policy</a></p>
+    </div>
+
+    <div class="section">
+      <h2>11. Contact</h2>
       <p>Questions about this policy? Contact us at:<br>
       <strong>Email:</strong> victor.boiting@gmail.com<br>
       <strong>Website:</strong> <a href="https://unitune.art">unitune.art</a></p>

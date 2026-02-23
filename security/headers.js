@@ -35,10 +35,22 @@ export function addSecurityHeaders(response) {
   // - unitune-api.onrender.com: UniTune API (hosted in Frankfurt, EU)
   headers.set('Content-Security-Policy',
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' pagead2.googlesyndication.com; " +
+    "script-src 'self' 'unsafe-inline' " +
+      "pagead2.googlesyndication.com " +
+      "tpc.googlesyndication.com " +
+      "googletagservices.com " +
+      "www.googletagmanager.com; " +
+    "frame-src " +
+      "googleads.g.doubleclick.net " +
+      "tpc.googlesyndication.com; " +
     "style-src 'self' 'unsafe-inline'; " +
     "img-src 'self' data: https:; " +
-    "connect-src 'self' pagead2.googlesyndication.com unitune-api.onrender.com;"
+    "connect-src 'self' " +
+      "https://pagead2.googlesyndication.com " +
+      "https://googleads.g.doubleclick.net " +
+      "https://adservice.google.com " +
+      "https://www.google.com " +
+      "https://api.unitune.art;"
   );
 
   // X-Frame-Options (Requirement 11.3)

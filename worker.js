@@ -26,6 +26,7 @@ import { handlePlaylistLink } from './handlers/playlist_link_handler.js';
 import { handleApiProxy } from './handlers/api_proxy_handler.js';
 import { handleDonationsAPI } from './handlers/donations_api_handler.js';
 import { handleKofiWebhook } from './handlers/kofi_webhook_handler.js';
+import { handleVersion } from './handlers/version_handler.js';
 import {
     handleHealth,
     handlePrivacy,
@@ -145,6 +146,11 @@ export default {
             // Ko-fi Webhook
             if (url.pathname === '/api/kofi-webhook') {
                 return handleKofiWebhook(request, config, env);
+            }
+
+            // App version info — no user data processed
+            if (url.pathname === '/api/version') {
+                return handleVersion(request);
             }
 
             // Handle OPTIONS requests for CORS preflight

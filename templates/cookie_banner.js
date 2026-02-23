@@ -9,7 +9,7 @@ export function getCookieBannerScript(adsensePublisherId) {
             const date = new Date();
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
             const expires = "expires=" + date.toUTCString();
-            document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
+            document.cookie = name + "=" + value + ";" + expires + ";path=/;Secure;SameSite=Strict";
         }
 
         function getCookie(name) {
@@ -24,19 +24,17 @@ export function getCookieBannerScript(adsensePublisherId) {
         }
 
         function loadAds() {
-            const script = document.createElement('script');
-            script.async = true;
-            script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}';
-            script.crossOrigin = 'anonymous';
-            document.head.appendChild(script);
-
-            script.onload = function() {
+            // Script is already loaded statically in <head> (needed for AdSense crawler verification).
+            // We only need to push the ad slots after consent. The global NPA flag was set
+            // before the script loaded, so no personalization cookies are written without consent.
+            const slots = document.querySelectorAll('.adsbygoogle');
+            slots.forEach(function() {
                 try {
                     (adsbygoogle = window.adsbygoogle || []).push({});
                 } catch (e) {
                     // Silent fail - no logging for privacy
                 }
-            };
+            });
         }
 
         function acceptConsent() {
