@@ -1,0 +1,61 @@
+name = "unitune-worker"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Static Assets - Logos and other files
+[assets]
+directory = "./public"
+
+# KV Namespace for rate limiting
+# Note: You need to create the KV namespace first using:
+# wrangler kv:namespace create "RATE_LIMIT"
+# Then update the id below with the actual namespace ID
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "799e178765ec41358c312cd85777a13c"
+preview_id = "79ea67f2d6eb456c97ee7490216be58b"
+
+# KV Namespace for song caching (to avoid API rate limits)
+[[kv_namespaces]]
+binding = "SONG_CACHE"
+id = "3cbc682bdfd842f08225fd8416df9cea"
+preview_id = "5b44fb0a202343268c843400329c5cf4"
+
+# KV Namespace for donations tracking
+[[kv_namespaces]]
+binding = "DONATIONS_KV"
+id = "7d6e824572c04de9bcbbdb47ea120ee3"
+preview_id = "72083ba0460841f98c53d16eee9749c9"
+
+# Environment Variables
+# These are non-secret configuration values that can be defined here
+# For sensitive values (API keys, secrets), use: wrangler secret put <KEY_NAME>
+[vars]
+# AdSense Publisher ID (non-secret, publicly visible in HTML)
+ADSENSE_PUBLISHER_ID = "ca-pub-8547021258440704"
+
+# UniTune API Endpoint (replaces Odesli)
+# Production: https://unitune-api.onrender.com/v1-alpha.1/links
+# Development: http://localhost:10000/v1-alpha.1/links
+UNITUNE_API_ENDPOINT = "https://api.unitune.art/v1-alpha.1/links"
+
+# Worker version for debugging
+WORKER_VERSION = "1.1.0"
+
+# Environment name (development, staging, production)
+ENVIRONMENT = "production"
+
+# Debug Logging (set to "true" to enable detailed logging in Cloudflare dashboard)
+# WARNING: Only enable for debugging! Logs may contain URL patterns (but not full URLs or IPs)
+# Set to "false" or remove for production to maintain privacy
+#DEBUG_LOGGING = "false"
+DEBUG_LOGGING = "false"
+
+# Cloudflare Observability - Modern logging configuration
+# This enables real-time logs in the Cloudflare dashboard
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
+invocation_logs = true

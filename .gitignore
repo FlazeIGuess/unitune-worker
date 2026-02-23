@@ -1,6 +1,6 @@
 # Wrangler
 .wrangler/
-wrangler.toml
+# wrangler.toml is committed — no actual secrets, only public IDs
 !wrangler.toml.example
 
 # Dependencies
