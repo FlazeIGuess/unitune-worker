@@ -44,11 +44,12 @@ jobs:
           });
         "
 
-    # Restore wrangler.toml from secret (the file is gitignored to protect KV IDs / ad config)
+    # Restore wrangler.toml from secret (the file is gitignored to protect KV IDs / ad config).
+    # Python is used to write the file to avoid shell escaping issues with multi-line secrets.
     - name: Restore wrangler.toml
       env:
         WRANGLER_TOML_CONTENT: ${{ secrets.WRANGLER_TOML }}
-      run: printf '%s' "$WRANGLER_TOML_CONTENT" > wrangler.toml
+      run: python3 -c "import os; open('wrangler.toml','w').write(os.environ['WRANGLER_TOML_CONTENT'])"
 
     - name: Install Wrangler
       run: npm install -g wrangler
